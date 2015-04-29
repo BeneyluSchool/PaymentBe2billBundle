@@ -10,7 +10,7 @@
 
     <services>
         <service id="payment.be2bill.transaction_controller.callback" class="%payment.be2bill.transaction_controller.callback.class%">
-            <argument type="service" id="payment.transaction.repository.doctrine_orm" />
+
         </service>
 
         <!-- avoid BC break -->

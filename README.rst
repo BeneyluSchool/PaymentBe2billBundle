@@ -15,7 +15,7 @@ A `Be2bill <http://www.be2bill.com/>`_ provider for `JMSPaymentCoreBundle <https
 
 **Supports only directLink payments, credits at the moment.**
 
-Installation
+Installation 
 ------------
 
 With `composer <https://github.com/composer/composer/>`_
