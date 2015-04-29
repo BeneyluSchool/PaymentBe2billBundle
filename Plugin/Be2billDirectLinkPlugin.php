@@ -45,6 +45,7 @@ class Be2billDirectLinkPlugin extends AbstractPlugin
     {
         $this->approve($transaction, $retry);
         $this->deposit($transaction, $retry);
+        $transaction->save();
     }
 
     public function approve(FinancialTransactionInterface $transaction, $retry)
@@ -56,34 +57,6 @@ class Be2billDirectLinkPlugin extends AbstractPlugin
 
     public function deposit(FinancialTransactionInterface $transaction, $retry)
     {
-        $parameters = $transaction->getPayment()->getPaymentInstruction()->getExtendedData()->get('be2bill_direct_link_params');
-
-        $response = $this->client->requestPayment($parameters);
-
-        $transaction->setTrackingId($response->getTransactionId());
-
-        if ($response->isSecureActionRequired()) {
-            $exception = new SecureActionRequiredException(sprintf('Deposit : transaction "%s" waits approval by 3DS', $response->getTransactionId()));
-            $exception->setHtml($response->getSecureHtml());
-
-            throw $exception;
-        }
-
-        if ($response->getAlias()) {
-            $extendedData = new ExtendedData;
-            $extendedData->set('ALIAS', $response->getAlias());
-            $transaction->setExtendedData($extendedData);
-        }
-
-        if (!$response->isSuccess()) {
-            $exception = new FinancialException(sprintf('Deposit : transaction "%s" is not valid', $response->getTransactionId()));
-            $exception->setFinancialTransaction($transaction);
-            $transaction->setResponseCode($response->getExecutionCode());
-            $transaction->setReasonCode($response->getMessage());
-
-            throw $exception;
-        }
-
         $transaction->setProcessedAmount($transaction->getPayment()->getTargetAmount());
         $transaction->setResponseCode(PluginInterface::RESPONSE_CODE_SUCCESS);
         $transaction->setReasonCode(PluginInterface::REASON_CODE_SUCCESS);

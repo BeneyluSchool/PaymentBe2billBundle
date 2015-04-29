@@ -7,6 +7,7 @@ use JMS\Payment\CoreBundle\Model\PaymentInterface;
 use JMS\Payment\CoreBundle\Plugin\PluginInterface;
 use JMS\Payment\CoreBundle\Entity\ExtendedData;
 
+use JMS\Payment\CoreBundle\Propel\FinancialTransactionQuery;
 use Rezzza\PaymentBe2billBundle\Client\Be2BillExecCode;
 use Rezzza\PaymentBe2billBundle\Callback\Be2BillRequest;
 use Rezzza\PaymentBe2billBundle\Repository\TransactionRepository;
@@ -20,12 +21,6 @@ use Rezzza\PaymentBe2billBundle\Exception\NotFoundTransactionException;
  */
 class TransactionControllerOnBe2BillRequest
 {
-    private $transactionRepository;
-
-    public function __construct(TransactionRepository $transactionRepository)
-    {
-        $this->transactionRepository = $transactionRepository;
-    }
 
     /**
      * Performs the approval and deposit of a callback request.
@@ -37,7 +32,7 @@ class TransactionControllerOnBe2BillRequest
      */
     public function approveAndDeposit(Be2BillRequest $request)
     {
-        $transaction = $this->transactionRepository->findOneByTrackingId($request->getTransactionId());
+        $transaction = FinancialTransactionQuery::create()->findOneByTrackingId($request->getTransactionId());
 
         if (null === $transaction) {
             throw new NotFoundTransactionException(
@@ -78,7 +73,7 @@ class TransactionControllerOnBe2BillRequest
         $transaction->setResponseCode((string) $execCode);
         $transaction->setReasonCode($failReason);
 
-        $this->transactionRepository->save($transaction);
+        $transaction->save();
     }
 
     /**
@@ -113,6 +108,6 @@ class TransactionControllerOnBe2BillRequest
             $transaction->setExtendedData($extendedData);
         }
 
-        $this->transactionRepository->save($transaction);
+        $transactiony->save();
     }
 }

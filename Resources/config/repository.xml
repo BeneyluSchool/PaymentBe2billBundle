@@ -5,8 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="payment.transaction.repository.doctrine_orm" class="Rezzza\PaymentBe2billBundle\Doctrine\ORMTransactionRepository">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
+        <service id="payment.transaction.repository.doctrine_orm" class="Rezzza\PaymentBe2billBundle\Propel\ORMTransactionRepository">
             <argument>%payment.plugin_controller.entity.options.financial_transaction_class%</argument>
         </service>
     </services>

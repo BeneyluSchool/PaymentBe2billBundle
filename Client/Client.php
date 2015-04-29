@@ -41,13 +41,12 @@ class Client
         $this->isDebug = (bool) $isDebug;
         $this->default3dsDisplayMode = $default3dsDisplayMode;
         $this->apiEndPoints = array(
-            'sandbox' => array(
-                'https://secure-test.be2bill.com/front/service/rest/process',
-            ),
-            'production' => array(
+            'sandbox' =>
+                'https://secure-test.be2bill.com/front/form/process.php'
+            ,
+            'production' =>
                 'https://secure-magenta1.be2bill.com/front/service/rest/process.php',
-                'https://secure-magenta2.be2bill.com/front/service/rest/process.php',
-            ),
+
         );
     }
 
@@ -84,6 +83,7 @@ class Client
 
         $parameters['HASH'] = $this->hashGenerator->hash($parameters);
 
+
         $parameters = array(
             'method' => $operation,
             'params' => $parameters,
@@ -94,6 +94,7 @@ class Client
 
     protected function sendApiRequest(array $parameters)
     {
+        $this->httpClient->setSslVerification(false);
         $apiEndPoints = $this->getApiEndpoints();
         $guzzleException = null;
 
@@ -103,6 +104,7 @@ class Client
 
         foreach ($apiEndPoints as $apiEndPoint) {
             try {
+
                 $request = $this->httpClient->post($apiEndPoint, null, $parameters);
                 $response = $this->httpClient->send($request);
             } catch (BadResponseException $e) {
@@ -127,7 +129,7 @@ class Client
         );
     }
 
-    private function getApiEndpoints()
+    public function getApiEndpoints()
     {
         return true === $this->isDebug ? $this->apiEndPoints['sandbox'] : $this->apiEndPoints['production'];
     }

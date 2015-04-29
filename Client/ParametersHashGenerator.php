@@ -14,6 +14,7 @@ class ParametersHashGenerator
     public function hash(array $parameters)
     {
         $signature = $this->password;
+
         $parameters = $this->sortParameters($parameters);
 
         foreach ($parameters as $name => $value) {
