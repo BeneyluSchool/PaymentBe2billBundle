@@ -45,7 +45,7 @@ class Client
                 'https://secure-test.be2bill.com/front/form/process.php'
             ,
             'production' =>
-                'https://secure-magenta1.be2bill.com/front/service/rest/process.php',
+                'https://secure-magenta1.be2bill.com/front/form/process.php',
 
         );
     }
