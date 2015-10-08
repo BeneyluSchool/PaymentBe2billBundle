@@ -45,7 +45,6 @@ class Be2billDirectLinkPlugin extends AbstractPlugin
     {
         $this->approve($transaction, $retry);
         $this->deposit($transaction, $retry);
-        $transaction->save();
     }
 
     public function approve(FinancialTransactionInterface $transaction, $retry)
